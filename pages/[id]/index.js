@@ -1,41 +1,44 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import Link from "next/link";
+import styles from '../../styles/Home.module.css';
 import { useEffect, useState } from "react";
-import supabase from "../utils/supabase";
+import { useRouter } from "next/router";
+import supabase from "../../utils/supabase";
 
-
-export default function Home() {
-  const [posts, setPosts] = useState([]);
+export default function Post() {
+  const router = useRouter();
+  const [post, setPost] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: fetchedPosts } = await supabase.from("posts").select("id, title");
-      setPosts(fetchedPosts);
+    const fetchPost = async () => {
+      const { data: post, error } = await supabase
+        .from("posts")
+        .select()
+        .match({ id: router.query.id })
+        .single();
+
+      if (error) {
+        console.error("Error fetching post:", error);
+      } else {
+        setPost(post);
+      }
     };
 
-    fetchData();
-  }, []);
+    fetchPost();
+  }, [router.query.id]);
 
-  if (posts.length === 0) {
-    return <p>No posts found.</p>;
+  if (!post) {
+    return <p>Loading...</p>;
   }
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>{router.query.id}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <div>
-          {posts.map((post) => (
-            <p key={post.id}>
-              <Link href={`/${post.id}`}>{post.title}</Link>
-            </p>
-          ))}
-        </div>
+        <pre>{JSON.stringify(post, null, 2)}</pre>
       </main>
 
       <footer>
@@ -116,5 +119,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  );
+  )
 }
