@@ -1,12 +1,12 @@
 import Layout from '../../components/layout';
-import Posts from '../../components/posts';
+import Post from '../../components/posts/post';
 import utilStyles from '../../styles/utils.module.css';
 
-export default function Post() {
+export default function Children() {
   return (
     <Layout children>
       <section className={utilStyles.headingMd}>
-        <Posts children></Posts>
+        <Post></Post>
       </section>
     </Layout >
   )

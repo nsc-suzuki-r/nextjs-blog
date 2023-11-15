@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <Layout home>
       <section className={utilStyles.headingMd}>
-        <Posts home></Posts>
+        <Posts></Posts>
       </section>
     </Layout>
   );
